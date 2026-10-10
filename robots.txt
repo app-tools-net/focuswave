@@ -1,6 +1,8 @@
 User-agent: *
 Allow: /
 
+Sitemap:
+
 # Exclude raw project documentation from polluting search results
 Disallow: /README.md
 
