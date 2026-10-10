@@ -1,43 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FocusWave | Ambient Soundscapes & Timer</title>
-    <meta name="description" content="Synthesised audio layers engineered to block noise, reduce anxiety, manage ADHD, and deepen concentration.">
-    <meta name="keywords" content="focuswave, ambient study sounds, white noise machine online, binaural beats concentration, adhd focus music, free online pomodoro timer, noise masking generator, soundscapes for coding, audio synthesis tool, brown noise block distractions, pink noise rain static, white noise oscillator, alpha waves memory retention, theta frequencies flow state, gamma beats mathematics programming, delta waves study burnout anxiety, no media background sound machine, lightweight study aid, browser audio synthesizer, lofi alternatives deep work, focus clock productivity tracker, student study timers, workspace sound maskers, noise blocking frequencies, adhd sensory regulation audio, acoustic masking generators, custom countdown study timer, zero latency ambient layers, neural entrainment frequencies, sound design concentration tools">
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
+    <title>FocusWave | Ambient Soundscapes & Focus Timer</title>
+    <meta name="description" content="Synthesised audio layers engineered to block noise, reduce anxiety, manage ADHD, and deepen concentration. No accounts or tracking.">
+    <meta name="keywords" content="focuswave, ambient study sounds, white noise machine online, binaural beats concentration, adhd focus music, free online pomodoro timer, noise masking generator, soundscapes for coding">
+    <meta name="robots" content="index, follow">
     <script data-goatcounter="https://goatcounter.com" async src="https://zgo.at"></script>
     <style>
-        body { background: #0d0f16; color: #eff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px 15px; box-sizing: border-box; justify-content: center; }
-        .box { width: 100%; max-width: 380px; background: #161925; padding: 20px; border-radius: 20px; box-shadow: 0 15px 30px rgba(0,0,0,0.5); text-align: center; box-sizing: border-box; }
-        h1 { margin: 0; font-size: 1.6rem; color: #82aaff; } p { margin: 0 0 15px; color: #4e5579; font-size: 0.8rem; }
-        .pomo { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; margin-bottom: 15px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-        .pomo-setup { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: #4e5579; }
-        .pomo-input { background: #0d0f16; border: 1px solid rgba(130,170,255,0.2); color: #ffcb6b; width: 45px; text-align: center; padding: 4px; border-radius: 8px; font-weight: bold; font-family: monospace; font-size: 0.9rem; }
-        .pomo-time { font-size: 1.8rem; font-family: monospace; font-weight: bold; color: #ffcb6b; }
-        .pomo-btn { background: #82aaff; border: none; padding: 6px 14px; border-radius: 15px; font-weight: bold; cursor: pointer; font-size: 0.8rem; color: #0d0f16; }
-        .row { background: rgba(255,255,255,0.01); padding: 10px 14px; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.03); gap: 10px; }
+        body { background: #0d0f16; color: #eff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px 15px; box-sizing: border-box; justify-content: center; }
+        .wrapper { width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 16px; }
+        .box { background: #161925; padding: 24px; border-radius: 20px; box-shadow: 0 15px 30px rgba(0,0,0,0.5); text-align: center; border: 1px solid #23283b; }
+        h1 { margin: 0; font-size: 1.6rem; color: #82aaff; font-weight: 800; letter-spacing: -0.5px; } p.tagline { margin: 4px 0 20px; color: #4e5579; font-size: 0.8rem; }
+        .pomo { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 16px; border-radius: 14px; margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .pomo-setup { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: #787e9e; font-weight: 600; }
+        .pomo-input { background: #0d0f16; border: 1px solid rgba(130,170,255,0.3); color: #ffcb6b; width: 50px; text-align: center; padding: 6px; border-radius: 8px; font-weight: bold; font-family: monospace; font-size: 0.95rem; outline: none; }
+        .pomo-time { font-size: 2.2rem; font-family: monospace; font-weight: bold; color: #ffcb6b; margin: 4px 0; }
+        .pomo-btn { background: #82aaff; border: none; padding: 8px 18px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 0.85rem; color: #0d0f16; transition: background 0.2s; }
+        .pomo-btn:hover { background: #a6c5ff; }
+        .row { background: rgba(255,255,255,0.01); padding: 12px 14px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.03); gap: 10px; }
         .row.active { border-color: #82aaff; background: rgba(130,170,255,0.04); }
         .info { text-align: left; flex: 1; min-width: 0; } 
-        .name { font-weight: bold; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } 
-        .desc { font-size: 0.7rem; color: #4e5579; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .name { font-weight: bold; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #e2e8f0; } 
+        .desc { font-size: 0.7rem; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
         .controls { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
         input[type="range"] { width: 65px; accent-color: #82aaff; height: 6px; cursor: pointer; }
-        .toggle-btn { background: transparent; border: 1px solid #4e5579; color: #4e5579; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 0.7rem; display: inline-flex; align-items: center; justify-content: center; padding: 0; flex-shrink: 0; }
+        .toggle-btn { background: transparent; border: 1px solid #4e5579; color: #4e5579; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 0.7rem; display: inline-flex; align-items: center; justify-content: center; padding: 0; flex-shrink: 0; font-weight: bold; }
         .row.active .toggle-btn { background: #82aaff; border-color: #82aaff; color: #0d0f16; }
+        .fluid-ad-container { width: 100%; background: #161925; border: 1px dashed #4e5579; border-radius: 12px; padding: 12px; text-align: center; box-sizing: border-box; font-size: 0.8rem; color: #64748b; }
+        .crawler-context-block { margin-top: 24px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; text-align: left; }
+        .crawler-context-block h2 { font-size: 0.95rem; font-weight: 700; margin-bottom: 8px; color: #82aaff; }
+        .crawler-context-block p { font-size: 0.75rem; line-height: 1.5; color: #64748b; margin-bottom: 12px; }
     </style>
 </head>
 <body>
-<div class="box">
-    <h1>FocusWave</h1><p>Pure audio synthesis. No media footprint.</p>
-    <div class="pomo">
-        <div class="pomo-setup" id="setup-wrapper">
-            <span>Set Timer:</span><input type="number" class="pomo-input" id="mins-input" min="1" max="180" value="25" oninput="updateMinutes()"><span>mins</span>
-        </div>
-        <div class="pomo-time" id="timer">25:00</div>
-        <button class="pomo-btn" id="tBtn" onclick="runTimer()">Start</button>
+    <div class="wrapper">
+        <main class="box">
+            <h1>FocusWave</h1><p class="tagline">Pure audio synthesis. No media footprint.</p>
+            <div class="pomo">
+                <div class="pomo-setup" id="setup-wrapper">
+                    <span>Set Timer:</span><input type="number" class="pomo-input" id="mins-input" min="1" max="180" value="25" oninput="updateMinutes()"><span>mins</span>
+                </div>
+                <div class="pomo-time" id="timer">25:00</div>
+                <button class="pomo-btn" id="tBtn" onclick="runTimer()">Start</button>
+            </div>
+            <div id="grid"></div>
+            <section class="crawler-context-block">
+                <h2>Acoustic Sound Maskers & ADHD Flow Regulation</h2>
+                <p>FocusWave synthesizes custom real-time audio frequencies directly inside your browser window. By loading custom Web Audio API mathematical nodes instead of processing tracking-heavy video streams or MP3 file libraries, users achieve instant sensory isolation with zero data bandwidth overhead.</p>
+                <h2>Binaural & Solfeggio Logic Synthesis</h2>
+                <p>From brownian noise fields engineered to mask workplace disruption to localized frequency oscillations that support focus retention blocks, this dashboard runs entirely client-side. Perfect for long programming sprints, writing, or intensive academic preparation cycles.</p>
+            </section>
+        </main>
+        <footer class="fluid-ad-container"><div style="font-weight:700; font-size:0.65rem; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:2px; color:#82aaff;">Ethical Space Allocation</div>Supporting safe, privacy-first contextual tools.</footer>
     </div>
-    <div id="grid"></div>
-</div>
 <script>
     const sounds = [
         { id: 'white', name: 'White Noise', desc: 'Masks open office chatter' }, { id: 'pink', name: 'Pink Noise', desc: 'Quiets sudden ambient drops' }, { id: 'brown', name: 'Brown Noise', desc: 'Blocks erratic ADHD triggers' },
@@ -45,14 +61,12 @@
         { id: 'delta', name: 'Delta Waves (2Hz)', desc: 'Eases study anxiety & burnout' }, { id: 'clock', name: 'Focus Clock', desc: 'Maintains flat task momentum' }, { id: 'zen', name: 'Zen Hum', desc: 'Drowns environmental noise' }, { id: 'space', name: 'Space Drone', desc: 'Calms overstimulated systems' }
     ];
     let audioCtx = null, active = {}, pInt = null, defaultMins = 25, timeLeft = 25 * 60, running = false;
-
     function updateMinutes() {
         if (running) return;
         let val = parseInt(document.getElementById('mins-input').value) || 25;
         if (val < 1) val = 1; defaultMins = val; timeLeft = val * 60;
         document.getElementById('timer').textContent = `${val.toString().padStart(2, '0')}:00`;
     }
-
     function runTimer() {
         const btn = document.getElementById('tBtn'), disp = document.getElementById('timer'), setup = document.getElementById('setup-wrapper');
         if (running) { clearInterval(pInt); btn.textContent = "Start"; setup.style.visibility = "visible"; running = false; return; }
@@ -62,14 +76,11 @@
             if (timeLeft <= 0) { clearInterval(pInt); disp.textContent = `${defaultMins.toString().padStart(2, '0')}:00`; timeLeft = defaultMins * 60; btn.textContent = "Start"; setup.style.visibility = "visible"; running = false; alert("Time is up!"); }
         }, 1000);
     }
-
     document.getElementById('grid').innerHTML = sounds.map(s => `
         <div class="row" id="row-${s.id}"><div class="info"><div class="name">${s.name}</div><div class="desc">${s.desc}</div></div>
             <div class="controls"><input type="range" id="vol-${s.id}" min="0" max="1" step="0.05" value="0.3" oninput="setVol('${s.id}', this.value)"><button class="toggle-btn" onclick="toggle('${s.id}')">▶</button></div></div>
     `).join('');
-
     function setVol(id, val) { if (active[id]) active[id].gain.gain.setValueAtTime(val, audioCtx.currentTime); }
-
     function toggle(id) {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const row = document.getElementById(`row-${id}`), btn = row.querySelector('.toggle-btn'), slider = document.getElementById(`vol-${id}`);
@@ -79,7 +90,6 @@
         }
         const gainNode = audioCtx.createGain(); gainNode.gain.setValueAtTime(slider.value, audioCtx.currentTime); gainNode.connect(audioCtx.destination);
         let src, interval = null;
-
         if (id === 'white' || id === 'pink' || id === 'brown') {
             const buf = audioCtx.createBuffer(1, 2 * audioCtx.sampleRate, audioCtx.sampleRate), out = buf.getChannelData(0); let b0=0, b1=0, b2=0, b3=0, b4=0, b5=0, b6=0, last=0;
             for (let i = 0; i < buf.length; i++) {
@@ -104,7 +114,7 @@
             const o1 = audioCtx.createOscillator(), o2 = audioCtx.createOscillator();
             o1.frequency.setValueAtTime((id === 'zen') ? 100 : 60, audioCtx.currentTime); o2.frequency.setValueAtTime((id === 'zen') ? 200 : 90, audioCtx.currentTime);
             if(id === 'space') { o1.type = 'sawtooth'; o2.type = 'sine'; } o1.connect(gainNode); o2.connect(gainNode); o1.start(0); o2.start(0); src = { stop: () => { o1.stop(); o2.stop(); } };
-        } active[id] = { src, gain: gainNode, int: interval }; row.classList.add('active'); btn.textContent = '◼';
+        } active[id] = { src, gain: gainNode, int: interval }; row.classList.add('active'); btn.textContent = '■';
     }
 </script>
 </body>
