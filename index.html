@@ -2,15 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FocusWave | Ambient Soundscapes & Focus Timer</title>
-    <meta name="description" content="FocusWave creates clean, customizable ambient soundscapes to help you study, code, and focus without distractions.">
-    <meta name="keywords" content="focus timer, ambient soundscapes, study music, white noise, brown noise, pink noise, deep work, concentration timer, productivity app, focus app, coding focus, work music, distraction blocker, browser focus tool, ambient sounds for studying, relaxing background noise, mindfulness timer, concentration music, focus website">
+    <meta name="description" content="FocusWave creates clean, customizable ambient soundscapes and a focus timer for study, coding, and deep work sessions.">
+    <meta name="keywords" content="focus timer, ambient soundscapes, study music, white noise, brown noise, pink noise, deep work, concentration timer, productivity app, focus app, coding focus, work timer, calm study sounds, distraction-free sound, browser focus timer">
     <style>
         :root {
             --bg: #07111f;
             --panel: rgba(15, 23, 42, 0.9);
-            --line: rgba(148, 163, 184, 0.18);
             --text: #e2e8f0;
             --muted: #a6b3c7;
             --accent: #7dd3fc;
@@ -32,27 +31,12 @@
         }
 
         .page-shell { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
-        header.site-header {
-            display: flex; align-items: center; justify-content: space-between; gap: 18px;
-            padding: 14px 16px; border-radius: 24px; background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
-            border: 1px solid rgba(255,255,255,0.03);
-        }
-        .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; }
-        .brand .mark {
-            width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center;
-            background: linear-gradient(135deg, var(--accent), #8b5cf6); color: #07111f; font-weight: 800;
-        }
-        nav.workspace-nav { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        nav a {
-            color: var(--muted); text-decoration: none; padding: 8px 12px; border-radius: 999px; font-weight: 700;
-        }
-        nav a:hover { color: var(--text); background: rgba(125,211,252,0.06); }
 
-        main.hero { display: grid; grid-template-columns: 1fr 360px; gap: 24px; align-items: start; }
         .card {
             background: var(--panel); border-radius: var(--radius); padding: 22px; border: 1px solid rgba(255,255,255,0.03);
             box-shadow: var(--shadow);
         }
+
         h1 { margin: 0 0 10px; font-size: clamp(1.8rem, 3.5vw, 2.8rem); }
         p.lead { margin: 0 0 18px; color: var(--muted); }
 
@@ -62,6 +46,8 @@
         }
         .btn.primary { background: linear-gradient(135deg, var(--accent-strong), var(--accent)); color: #07111f; }
         .btn.ghost { background: transparent; border: 1px solid rgba(255,255,255,0.03); color: var(--text); }
+
+        main.hero { display: grid; grid-template-columns: 1fr 360px; gap: 24px; align-items: start; }
 
         .timer-card { display: flex; flex-direction: column; gap: 12px; }
         .timer-display {
@@ -104,17 +90,6 @@
 </head>
 <body>
     <div class="page-shell">
-        <header class="site-header card" role="banner">
-            <div class="brand">
-                <span class="mark" aria-hidden="true">F</span>
-                <span>FocusWave</span>
-            </div>
-            <nav class="workspace-nav" aria-label="Workspace links">
-                <a href="https://app-tools-net.github.io/boardscore/">BoardScore</a>
-                <a href="https://app-tools-net.github.io/scriptflip/">ScriptFlip</a>
-            </nav>
-        </header>
-
         <main class="hero" role="main">
             <section class="card" aria-labelledby="intro-title">
                 <h1 id="intro-title">Make the room quieter. Make your mind sharper.</h1>
@@ -164,6 +139,8 @@
     (function () {
         'use strict';
 
+        const STORAGE_KEY = 'focuswave_state_v1';
+
         const sounds = [
             { id: 'white', name: 'White Noise', desc: 'Masks open office chatter' },
             { id: 'pink', name: 'Pink Noise', desc: 'Smooths harsh sound edges' },
@@ -183,11 +160,73 @@
         let defaultMins = 25;
         let timeLeft = defaultMins * 60;
         let running = false;
+        let storageOk = false;
 
         const minsInput = document.getElementById('mins-input');
         const timerEl = document.getElementById('timer');
         const tBtn = document.getElementById('tBtn');
         const grid = document.getElementById('grid');
+
+        function safeStorage(){
+            try {
+                const test = '__focuswave_test__';
+                window.localStorage.setItem(test, test);
+                window.localStorage.removeItem(test);
+                storageOk = true;
+            } catch (e) {
+                storageOk = false;
+            }
+        }
+
+        function saveState(){
+            if (!storageOk) return;
+            try {
+                const payload = {
+                    minutes: defaultMins,
+                    volumes: Object.fromEntries(sounds.map(s => [s.id, getVolume(s.id)])),
+                    active: Object.keys(active)
+                };
+                window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+            } catch (e) { console.warn('Storage save failed', e); }
+        }
+
+        function loadState(){
+            if (!storageOk) return;
+            try {
+                const raw = window.localStorage.getItem(STORAGE_KEY);
+                if (!raw) return;
+                const parsed = JSON.parse(raw);
+                if (!parsed || typeof parsed !== 'object') return;
+
+                if (typeof parsed.minutes === 'number' && Number.isFinite(parsed.minutes)) {
+                    defaultMins = Math.min(180, Math.max(1, Math.round(parsed.minutes)));
+                }
+                minsInput.value = String(defaultMins);
+                timeLeft = defaultMins * 60;
+                timerEl.textContent = formatTime(timeLeft);
+
+                if (parsed.volumes && typeof parsed.volumes === 'object') {
+                    for (const sound of sounds) {
+                        const value = Number(parsed.volumes[sound.id]);
+                        if (Number.isFinite(value)) {
+                            const slider = document.getElementById('vol-' + sound.id);
+                            if (slider) slider.value = String(Math.min(1, Math.max(0, value)));
+                        }
+                    }
+                }
+
+                if (Array.isArray(parsed.active)) {
+                    parsed.active.forEach((id) => {
+                        const has = sounds.some(s => s.id === id);
+                        if (has) {
+                            setTimeout(() => toggle(id), 0);
+                        }
+                    });
+                }
+            } catch (e) {
+                console.warn('Storage load failed', e);
+            }
+        }
 
         function ensureAudioContext() {
             if (audioCtx && audioCtx.state !== 'closed') return audioCtx;
@@ -213,6 +252,13 @@
             return String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
         }
 
+        function getVolume(id) {
+            const slider = document.getElementById('vol-' + id);
+            if (!slider) return 0.3;
+            const number = Number(slider.value);
+            return Number.isFinite(number) ? Math.min(1, Math.max(0, number)) : 0.3;
+        }
+
         function updateMinutes() {
             if (running) return;
             let val = parseInt(minsInput.value, 10) || 25;
@@ -220,6 +266,7 @@
             defaultMins = val;
             timeLeft = val * 60;
             timerEl.textContent = formatTime(timeLeft);
+            saveState();
         }
 
         function runTimer() {
@@ -292,7 +339,10 @@
             btn.setAttribute('aria-pressed', 'false');
             btn.addEventListener('click', () => toggle(sound.id));
 
-            range.addEventListener('input', () => setVol(sound.id, range.value));
+            range.addEventListener('input', () => {
+                setVol(sound.id, range.value);
+                saveState();
+            });
 
             controls.appendChild(range);
             controls.appendChild(btn);
@@ -335,6 +385,7 @@
                     btn.setAttribute('aria-pressed', 'false');
                 }
             }
+            saveState();
         }
 
         function toggle(id) {
@@ -449,6 +500,7 @@
                 row.classList.add('active');
                 btn.textContent = '■';
                 btn.setAttribute('aria-pressed', 'true');
+                saveState();
             } catch (err) {
                 console.error('Audio error', err);
                 stopLayer(id);
@@ -481,6 +533,8 @@
             } catch (e) {}
         });
 
+        safeStorage();
+        loadState();
         timerEl.textContent = formatTime(timeLeft);
     })();
     </script>
