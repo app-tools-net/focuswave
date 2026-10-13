@@ -1,8 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://app-tools-net.github.io/focuswave/
-
-# Exclude raw project documentation from polluting search results
-Disallow: /README.md
-
